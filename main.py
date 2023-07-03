@@ -1,15 +1,8 @@
-# Step 1: Data Preprocessing
+
 import re  # regular expression
 from collections import Counter
 import numpy as np
 import pandas as pd
-
-
-# Implement the function process_data which
-# 1) Reads in a corpus
-# #2) Changes everything to lowercase
-# 3) Returns a list of words.
-
 
 w = [] #words
 with open('sample.txt','r',encoding="utf8") as f:
@@ -17,13 +10,10 @@ with open('sample.txt','r',encoding="utf8") as f:
     file_name_data = file_name_data.lower()
     w = re.findall('\w+', file_name_data)
 
-
 v = set(w) #vocabulary
 print(f"The first 10 words in our dictionary are: \n{w[0:10]}")
 print(f"The dictionary has {len(v)} words ")
 
-
-# a get_count function that returns a dictionary of word vs frequency
 def get_count(words):
     word_count = {}
     for word in words:
@@ -33,15 +23,8 @@ def get_count(words):
             word_count[word] = 1
     return word_count
 
-
 word_count = get_count(w)
 print(f"The dictionary has  {len(word_count)} key values pairs")
-
-
-
-
-# implement get_probs function
-# to calculate the probability that any word will appear if randomly selected from the dictionary
 
 def get_probs(word_count_dict):
     probs = {}
@@ -50,10 +33,6 @@ def get_probs(word_count_dict):
         probs[key] = word_count_dict[key] / m
     return probs
 
-
-# Now we implement 4 edit word functions
-
-# DeleteLetter:removes a letter from a given word
 def DeleteLetter(word):
     delete_list = []
     split_list = []
@@ -63,10 +42,8 @@ def DeleteLetter(word):
         delete_list.append(a + b[1:])
     return delete_list
 
-
 delete_word_l = DeleteLetter(word="cans")
 
-# SwitchLetter:swap two adjacent letters
 def SwitchLetter(word):
     split_l = []
     switch_l = []
@@ -75,10 +52,8 @@ def SwitchLetter(word):
     switch_l = [a + b[1] + b[0] + b[2:] for a, b in split_l if len(b) >= 2]
     return switch_l
 
-
 switch_word_l = SwitchLetter(word="eta")
 
-# replace_letter: changes one letter to another
 def replace_letter(word):
     split_l = []
     replace_list = []
@@ -91,7 +66,6 @@ def replace_letter(word):
 
 replace_l = replace_letter(word='can')
 
-# insert_letter: adds additional characters
 def insert_letter(word):
     split_l = []
     insert_list = []
@@ -102,10 +76,6 @@ def insert_letter(word):
     # print(split_l)
     return insert_list
 
-
-
-# combining the edits
-# switch operation optional
 def edit_one_letter(word, allow_switches=True):
     edit_set1 = set()
     edit_set1.update(DeleteLetter(word))
@@ -115,9 +85,6 @@ def edit_one_letter(word, allow_switches=True):
     edit_set1.update(insert_letter(word))
     return edit_set1
 
-
-
-# edit two letters
 def edit_two_letters(word, allow_switches=True):
     edit_set2 = set()
     edit_one = edit_one_letter(word, allow_switches=allow_switches)
@@ -127,9 +94,6 @@ def edit_two_letters(word, allow_switches=True):
             edit_set2.update(edit_two)
     return edit_set2
 
-
-
-# get corrected word
 def get_corrections(word, probs, vocab, n=2):
     suggested_word = []
     best_suggestion = []
